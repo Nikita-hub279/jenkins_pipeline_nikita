@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    environment {
+        REPO_URL = 'https://github.com/Nikita-hub279/jenkins_pipeline_nikita.git'
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main', url: "${REPO_URL}"
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo 'Installing Python dependencies...'
+                bat 'python -m pip install --upgrade pip'
+                bat 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run Pytest') {
+            steps {
+                echo 'Running pytest...'
+                bat 'pytest tests/ --maxfail=1 --disable-warnings --tb=short'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploy step can go here.'
+            }
+        }
+    }
+}
